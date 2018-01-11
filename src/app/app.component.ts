@@ -11,20 +11,21 @@ export class AppComponent {
 
   constructor(private http: HttpClient) { }
 
-  quote = 'Chuck Norris took your quote to the center of the Sun';
+  quote = '';
   api = 'http://api.icndb.com/jokes/random'
 
   ngOnInit() {
 
-    setInterval(() => {
-      this.http.get(this.api)
-        .subscribe(
-        data => {
-          this.quote = data["value"]["joke"];
-        }
-        );
-    }, 6000);
+    this.getJoke().add(() => {
+      setInterval(this.getJoke, 6000);
+    })
 
+  }
 
+  getJoke = () => {
+    return this.http.get(this.api)
+      .subscribe(data => {
+        this.quote = data["value"]["joke"];
+      });
   }
 }
